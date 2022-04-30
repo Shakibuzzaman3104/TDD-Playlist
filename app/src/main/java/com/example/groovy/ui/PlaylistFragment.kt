@@ -8,11 +8,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.groovy.PlaylistApi
+import com.example.groovy.PlaylistService
 import com.example.groovy.adapter.PlaylistRecyclerViewAdapter
 import com.example.groovy.repository.PlaylistRepository
 import com.example.groovy.databinding.FragmentPlaylistBinding
+import com.example.groovy.model.ModelPlaylistItem
 import com.example.groovy.viewmodel.PlaylistViewModel
 import com.example.groovy.viewmodel.PlaylistViewModelFactory
+import kotlinx.coroutines.flow.flow
 
 
 class PlaylistFragment : Fragment() {
@@ -22,6 +26,11 @@ class PlaylistFragment : Fragment() {
     lateinit var viewModelFactory: PlaylistViewModelFactory
     private lateinit var binding: FragmentPlaylistBinding
     private lateinit var playlistAdapter: PlaylistRecyclerViewAdapter
+    private val service:PlaylistService = PlaylistService(object : PlaylistApi {
+        override fun fetchAllPlaylist(): List<ModelPlaylistItem> {
+            return emptyList()
+        }
+    })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +46,7 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModelFactory = PlaylistViewModelFactory(PlaylistRepository())
+        viewModelFactory = PlaylistViewModelFactory(PlaylistRepository(service))
         viewModel = ViewModelProvider(this, viewModelFactory)[PlaylistViewModel::class.java]
     }
 

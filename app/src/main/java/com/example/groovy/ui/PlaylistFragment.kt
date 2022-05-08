@@ -11,26 +11,28 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.groovy.PlaylistApi
 import com.example.groovy.PlaylistService
 import com.example.groovy.adapter.PlaylistRecyclerViewAdapter
-import com.example.groovy.repository.PlaylistRepository
 import com.example.groovy.databinding.FragmentPlaylistBinding
-import com.example.groovy.model.ModelPlaylistItem
+import com.example.groovy.repository.PlaylistRepository
 import com.example.groovy.viewmodel.PlaylistViewModel
-import com.example.groovy.viewmodel.PlaylistViewModelFactory
-import kotlinx.coroutines.flow.flow
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class PlaylistFragment : Fragment() {
 
 
     lateinit var viewModel: PlaylistViewModel
-    lateinit var viewModelFactory: PlaylistViewModelFactory
     private lateinit var binding: FragmentPlaylistBinding
     private lateinit var playlistAdapter: PlaylistRecyclerViewAdapter
-    private val service:PlaylistService = PlaylistService(object : PlaylistApi {
-        override fun fetchAllPlaylist(): List<ModelPlaylistItem> {
-            return emptyList()
-        }
-    })
+
+
+    @Inject
+    lateinit var api: PlaylistApi
+    lateinit var service: PlaylistService
+    lateinit var repository: PlaylistRepository
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,8 +48,7 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModelFactory = PlaylistViewModelFactory(PlaylistRepository(service))
-        viewModel = ViewModelProvider(this, viewModelFactory)[PlaylistViewModel::class.java]
+        viewModel = ViewModelProvider(this)[PlaylistViewModel::class.java]
     }
 
     private fun initAdapter() {

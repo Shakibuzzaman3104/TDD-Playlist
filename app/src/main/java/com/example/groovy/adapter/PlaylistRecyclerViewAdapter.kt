@@ -3,6 +3,7 @@ package com.example.groovy.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groovy.R
 import com.example.groovy.databinding.ItemPlaylistBinding
 import com.example.groovy.model.ModelPlaylistItem
 
@@ -33,7 +34,7 @@ class PlaylistRecyclerViewAdapter(
         with(holder.binding) {
             playlistName.text = item.name
             playlistCategory.text = item.category
-            playlistImage.setImageResource(item.image)
+            playlistImage.setImageResource(R.drawable.playlist)
         }
 
     }

@@ -4,7 +4,6 @@ import com.example.groovy.model.ModelPlaylistItem
 import retrofit2.http.GET
 
 interface PlaylistApi {
-    @GET
-    fun fetchAllPlaylist() :List<ModelPlaylistItem>
-
+    @GET("playlists/")
+    suspend fun fetchAllPlaylist() :List<ModelPlaylistItem>
 }

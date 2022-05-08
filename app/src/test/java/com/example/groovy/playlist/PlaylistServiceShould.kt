@@ -22,15 +22,30 @@ class PlaylistServiceShould : BaseUnitTest() {
     @Test
     fun fetchPlaylistFromApi() = runTest {
         service = PlaylistService(api)
-        service.fetchPlaylist()
+        service.fetchPlaylist().first() // .first is called to force emission
         verify(api, times(1)).fetchAllPlaylist()
     }
 
     @Test
     fun convertValuesToFlowAndEmitThem() = runTest{
-        whenever(api.fetchAllPlaylist()).thenReturn(playlists)
-        service = PlaylistService(api)
+        mockSuccessfulCase()
         assertEquals(Result.success(playlists), service.fetchPlaylist().first())
     }
+
+    @Test
+    fun mockSuccessfulCase() = runTest{
+        whenever(api.fetchAllPlaylist()).thenReturn(playlists)
+        service = PlaylistService(api)
+    }
+
+    @Test
+     fun emitErrorResultWhenNetworkFails() = runTest {
+        whenever(api.fetchAllPlaylist()).thenThrow(RuntimeException("Backend issues"))
+        val service = PlaylistService(api)
+
+        assertEquals("Something went wrong", service.fetchPlaylist().first().exceptionOrNull()?.message)
+
+    }
+
 
 }
